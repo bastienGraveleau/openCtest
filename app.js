@@ -2,6 +2,7 @@ const express = require('express');
 const stuffRoute = require('./routes/stuff');
 const cors = require('cors');
 const userRoutes = require('./routes/user');
+const path = require('path');
 
 const app = express();
 app.use(express.json());
@@ -17,7 +18,7 @@ app.use((req, res, next) => {
 });
 app.use('/api/stuff', stuffRoute);
 app.use('/api/auth', userRoutes);
-
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 const stuff = [
     {
@@ -32,7 +33,7 @@ const stuff = [
       imageUrl: 'https://cdn.pixabay.com/photo/2019/06/11/18/56/camera-4267692_1280.jpg',
       price: 2900,
     },
-  ];
+];
 
 mongoClient.dbConnect().then(
     (dbconnected) => {

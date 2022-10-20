@@ -19,15 +19,24 @@ exports.getOne = async function(req, res) {
 };
 exports.createOne = async function(req, res) {
     console.log(req.body);
-    
+    if (req.body.thing) {
+        req.body = JSON.parse(req.body.thing)
+    }
+    console.log(req.body);
     req.body._id = new ObjectID() 
+    req.body.imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     const objectsAdd = await db.collection("object").insertOne(req.body).catch((err)=>  {
-        console.log("fferr",err.errInfo.details);
+        console.log("fferr",err.errInfo.details.schemaRulesNotSatisfied);
     });
     res.status(200).json(objectsAdd);
 };
 exports.updateOne = async function(req, res) {
     console.log(req.body)
+    console.log(req.body);
+    if (req.body.thing) {
+        req.body = JSON.parse(req.body.thing)
+    }
+    req.body.imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     delete req.body._id;
     const objectsModif = await db.collection("object").updateOne({ _id: new ObjectID(req.params.id) }, { $set : req.body});
     res.status(200).json(objectsModif);
